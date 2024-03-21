@@ -164,7 +164,7 @@ plutonGroup.add(pluton)
 
 
 
-const backgroundGeometry = new THREE.BoxGeometry(1900, 1900, 2500);
+const backgroundGeometry = new THREE.BoxGeometry(2500, 2500, 3000);
 const backgroundMaterial = new THREE.MeshBasicMaterial({ map: textureBackground, side: THREE.BackSide });
 const backgroundCube = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
 scene.add(backgroundCube);
@@ -174,11 +174,17 @@ scene.add(backgroundCube);
 
 camera.position.z = 430;
 
+
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.minDistance=80
-controls.maxDistance=1500
+controls.maxDistance=1650
 
 let rotateSphere = true;
+document.addEventListener('contextmenu', function(event) {
+  event.preventDefault();
+  rotateSphere = !rotateSphere;
+});
+
 
 function animate() {
   requestAnimationFrame(animate);
