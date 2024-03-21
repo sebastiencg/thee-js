@@ -171,7 +171,6 @@ scene.add(backgroundCube);
 
 
 
-
 camera.position.z = 430;
 
 
