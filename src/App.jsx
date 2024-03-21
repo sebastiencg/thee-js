@@ -1,147 +1,132 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Importer OrbitControls
+
 import terreTexture from "../src/assets/terre.jpg";
 import backgroundTexture from "../src/assets/backroound.jpeg";
 import moonTexture from "../src/assets/moon.jpg";
+import sunTexture from "../src/assets/sun.jpg";
+import mercureTexture from "../src/assets/mercurymap.jpg"
+import venusTexture from "../src/assets/Venus.jpg"
+import marsTexture from "../src/assets/mars.jpg"
+
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+
 
 const textureLoader = new THREE.TextureLoader();
 const textureTerre = textureLoader.load(terreTexture);
 const textureBackground = textureLoader.load(backgroundTexture);
 const textureMoon = textureLoader.load(moonTexture);
+const textureSun = textureLoader.load(sunTexture);
+const textureMecure = textureLoader.load(mercureTexture);
+const textureVenus = textureLoader.load(venusTexture);
+const textureMars = textureLoader.load(marsTexture);
 
-// Création d'un groupe pour la Terre et la Lune
+
+const sunGroup = new THREE.Group();
+
+const sunMercureGroup = new THREE.Group();
+const mercureGroup = new THREE.Group();
+
+const sunVenusGroup = new THREE.Group();
+const venusGroup = new THREE.Group();
+
+const sunTerreGroup = new THREE.Group();
 const terreGroup = new THREE.Group();
-scene.add(terreGroup);
 
-// Terre
-const sphereGeometry = new THREE.SphereGeometry(50, 32, 16);
-const basicMaterial = new THREE.MeshBasicMaterial({
-  map: textureTerre
-});
+const sunMarsGroup = new THREE.Group();
+const marsGroup = new THREE.Group();
 
-const terre = new THREE.Mesh(sphereGeometry, basicMaterial);
+
+mercureGroup.position.z=100
+venusGroup.position.z=200
+terreGroup.position.z= 320
+marsGroup.position.z= 450
+
+sunMercureGroup.add(mercureGroup)
+sunVenusGroup.add(venusGroup)
+sunTerreGroup.add(terreGroup)
+sunMarsGroup.add(marsGroup)
+
+sunGroup.add(sunTerreGroup,sunMercureGroup,sunVenusGroup,sunMarsGroup)
+scene.add(sunGroup)
+
+const sunGeometry = new THREE.SphereGeometry(60, 320, 160);
+const sunMaterial = new THREE.MeshBasicMaterial({ map: textureSun });
+const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+scene.add(sun);
+
+const mercureGeometry = new THREE.SphereGeometry(5, 320, 160);
+const mercureMaterial = new THREE.MeshBasicMaterial({ map: textureMecure });
+const mercure = new THREE.Mesh(mercureGeometry, mercureMaterial);
+mercureGroup.add(mercure)
+
+const venusGeometry = new THREE.SphereGeometry(6, 320, 160);
+const venusMaterial = new THREE.MeshBasicMaterial({ map: textureVenus });
+const venus = new THREE.Mesh(venusGeometry, venusMaterial);
+venusGroup.add(venus)
+
+const terreGeometry = new THREE.SphereGeometry(8, 320, 160);
+const terreMaterial = new THREE.MeshBasicMaterial({ map: textureTerre });
+const terre = new THREE.Mesh(terreGeometry, terreMaterial);
 terreGroup.add(terre);
 
-// Lune
-const moonGeometry = new THREE.SphereGeometry(15, 32, 16); // Réduire la taille de la lune
-const moonMaterial = new THREE.MeshBasicMaterial({
-  map: textureMoon
-});
+const moonGeometry = new THREE.SphereGeometry(1.5, 320, 160);
+const moonMaterial = new THREE.MeshBasicMaterial({ map: textureMoon });
 const moon = new THREE.Mesh(moonGeometry, moonMaterial);
-moon.position.x = 100; // Positionner la lune à droite de la terre
+moon.position.x = 10;
 terreGroup.add(moon);
 
-// Fond
-const backgroundGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
-const backgroundMaterial = new THREE.MeshBasicMaterial({
-  map: textureBackground,
-  side: THREE.BackSide
-});
+const marsGeometry = new THREE.SphereGeometry(6, 320, 160);
+const marsMaterial = new THREE.MeshBasicMaterial({ map: textureMars });
+const mars = new THREE.Mesh(marsGeometry, marsMaterial);
+marsGroup.add(mars)
+
+const backgroundGeometry = new THREE.BoxGeometry(1900, 1900, 2500);
+const backgroundMaterial = new THREE.MeshBasicMaterial({ map: textureBackground, side: THREE.BackSide });
 const backgroundCube = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
 scene.add(backgroundCube);
 
-camera.position.z = 400; // Ajuster la position de la caméra pour voir les deux objets
+
+
+
+camera.position.z = 430;
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.minDistance=7
+controls.maxDistance=1500
 
 let rotateSphere = true;
-
-// Déclarer des variables pour stocker les positions précédentes de la souris
-let mouseX = 0;
-let mouseY = 0;
-
-// Indique si le bouton gauche de la souris est enfoncé ou non
-let leftMouseDown = false;
-
-// Ajouter des écouteurs d'événements pour détecter les mouvements de la souris, le clic gauche enfoncé et le relâchement du clic gauche
-window.addEventListener('mousemove', onMouseMove, false);
-window.addEventListener('mousedown', onMouseDown, false);
-window.addEventListener('mouseup', onMouseUp, false);
-
-console.log(camera.position.y)
-console.log(camera.position.x)
-console.log(camera.position.z)
-
-function onMouseMove(event) {
-  if (leftMouseDown) {
-    const deltaX = event.clientX - mouseX;
-    const deltaY = event.clientY - mouseY;
-
-// Mettre à jour les positions précédentes de la souris avec les nouvelles positions
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-
-// Calculer le déplacement relatif de la caméra
-    const moveX = deltaX * 0.9; // Ajustez la sensibilité de déplacement horizontale selon vos besoins
-    const moveY = deltaY * 0.9; // Ajustez la sensibilité de déplacement verticale selon vos besoins
-
-// Déplacer la caméra en fonction du déplacement de la souris, sans changer sa position z
-    camera.position.x += moveX;
-    camera.position.y -= moveY;
-
-// Mettre à jour la cible de la caméra pour qu'elle regarde toujours le centre de la scène
-    camera.lookAt(scene.position);
-
-    console.log(camera.position.y)
-    console.log(camera.position.x)
-    console.log(camera.position.z)
-  }
-}
-
-function onMouseDown(event) {
-  if (event.button === 0) { // Vérifie si le clic est le clic gauche (0 pour le clic gauche)
-    leftMouseDown = true;
-
-    // Mettre à jour les positions précédentes de la souris
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-  }
-}
-
-function onMouseUp(event) {
-  if (event.button === 0) { // Vérifie si le clic est le clic gauche (0 pour le clic gauche)
-    leftMouseDown = false;
-  }
-}
-
-// Fonction pour détecter les clics de souris
-function onMouseClick(event) {
-  // Raycaster pour détecter les intersections avec les objets 3D
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-
-  // Calcule les coordonnées normalisées du clic de la souris
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-  // Met à jour le rayon de la souris
-  raycaster.setFromCamera(mouse, camera);
-
-  // Recherche des intersections avec les objets de la scène
-  const intersects = raycaster.intersectObjects(scene.children, true);
-
-  if (intersects.length > 0) {
-    console.log('Objet cliqué!');
-  }
-}
-
-// Ajouter un écouteur d'événement pour détecter les clics de souris
-window.addEventListener('click', onMouseClick, false);
-
 
 function animate() {
   requestAnimationFrame(animate);
 
   if (rotateSphere) {
-    terreGroup.rotation.y += 0.0015; // Fait tourner le groupe Terre-Lune
+
+
+
+    sunMercureGroup.rotation.y+=0.009
+    mercure.rotation.y +=0.01
+
+    sunVenusGroup.rotation.y+=0.007
+    venus.rotation.y +=0.02
+
+    sunTerreGroup.rotation.y +=0.0022
+    terreGroup.rotation.y += 0.010;
+    terre.rotation.y +=0.002
+
+    sunMarsGroup.rotation.y+=0.0015
+    mars.rotation.y +=0.0015
   }
+  controls.update();
 
   renderer.render(scene, camera);
 }
 
-
-export  default animate()
+animate();
+export  default  animate()
