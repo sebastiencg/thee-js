@@ -157,10 +157,10 @@ const neptuneMaterial = new THREE.MeshBasicMaterial({ map: textureNeptune });
 const neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
 neptuneGroup.add(neptune)
 
-const plutonGeometry = new THREE.SphereGeometry(14, 320, 160);
+const plutonGeometry = new THREE.SphereGeometry(5, 320, 160);
 const plutonMaterial = new THREE.MeshBasicMaterial({ map: texturePluton });
 const pluton = new THREE.Mesh(plutonGeometry, plutonMaterial);
-neptuneGroup.add(pluton)
+plutonGroup.add(pluton)
 
 
 
@@ -178,7 +178,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.minDistance=80
 controls.maxDistance=1500
 
-let rotateSphere = false;
+let rotateSphere = true;
 
 function animate() {
   requestAnimationFrame(animate);
