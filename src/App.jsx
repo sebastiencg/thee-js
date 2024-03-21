@@ -173,7 +173,6 @@ scene.add(backgroundCube);
 
 camera.position.z = 430;
 
-
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.minDistance=80
 controls.maxDistance=1650
