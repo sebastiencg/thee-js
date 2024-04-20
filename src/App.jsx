@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Importer OrbitControls
+import Swal from 'sweetalert2';
+
 
 import terreTexture from "../src/assets/terre.jpg";
 import backgroundTexture from "../src/assets/backroound.jpeg";
@@ -24,6 +26,7 @@ document.body.appendChild(renderer.domElement);
 
 
 const textureLoader = new THREE.TextureLoader();
+
 const textureTerre = textureLoader.load(terreTexture);
 const textureBackground = textureLoader.load(backgroundTexture);
 const textureMoon = textureLoader.load(moonTexture);
@@ -189,8 +192,6 @@ function animate() {
 
   if (rotateSphere) {
 
-
-
     sunMercureGroup.rotation.y+=0.009
     mercure.rotation.y +=0.01
 
@@ -224,6 +225,120 @@ function animate() {
 
   renderer.render(scene, camera);
 }
+
+function onMouseClick(event) {
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObjects(scene.children, true);
+
+  for (let i = 0; i < intersects.length; i++) {
+    if (intersects[i].object === sun) {
+      Swal.fire({
+        title: 'Informations sur le soleil ',
+        html: 'Le Soleil est l’étoile du Système solaire. Dans la classification astronomique, c’est une étoile de type naine jaune d\'une masse d\'environ 2 × 1030 kg, composée d’hydrogène (74 % de la masse ou 92 % du volume) et d’hélium (25 % de la masse ou 8 % du volume)',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+    }
+
+    if (intersects[i].object === mercure) {
+      Swal.fire({
+        title: 'Informations sur mercure',
+        html: 'Mercure est la planète la plus proche du Soleil et la moins massive du Système solaireN 1. Son éloignement du Soleil est compris entre 0,31 et 0,47 unité astronomique (soit 46 et 70 millions de kilomètres), ce qui correspond à une excentricité orbitale de 0,2 — plus de douze fois supérieure à celle de la Terre, et de loin la plus élevée pour une planète du Système solaire.',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+    }
+    if (intersects[i].object === venus) {
+      Swal.fire({
+        title: 'Informations sur venus',
+        html: 'Vénus est la deuxième planète du Système solaire par ordre d\'éloignement au Soleil, et la sixième plus grosse aussi bien par la masse que le diamètre.\n' +
+          '\n' +
+          'Vénus orbite autour du Soleil tous les 224,7 jours terrestres. Avec une période de rotation de 243 jours terrestres, il lui faut plus de temps pour tourner autour de son axe que toute autre planète du Système solaire.',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+    }
+    if (intersects[i].object === terre) {
+      Swal.fire({
+        title: 'Informations sur la Terre',
+        html: 'La Terre est la troisième planète par ordre d\'éloignement au Soleil et la cinquième plus grande du Système solaire aussi bien par la masse que par le diamètre. Par ailleurs, elle est le seul objet céleste connu pour abriter la vie. Elle orbite autour du Soleil en 365,256 jours solaires ',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+    }
+    if (intersects[i].object === moon) {
+      Swal.fire({
+        title: 'Informations sur la lune',
+        html: 'La Lune est l\'unique satellite naturel permanent de la planète Terre. Il s\'agit du cinquième plus grand satellite naturel du Système solaire, et du plus grand des satellites planétaires par rapport à la taille de la planète autour de laquelle il orbite. C\'est le deuxième satellite le plus dense du Système solaire après Io, un satellite de Jupiterc.',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+    }
+    if (intersects[i].object === mars) {
+      Swal.fire({
+        title: 'Informations sur mars',
+        html: 'Mars (prononcé en français : /maʁs/) est la quatrième planète du Système solaire par ordre croissant de la distance au Soleil et la deuxième par ordre croissant de la taille et de la masse. Son éloignement au Soleil est compris entre 1,381 et 1,666 au (206,6 à 249,2 millions de kilomètres), elle a une période orbitale de 669,58 jours martiens (686,71 jours ou 1,88 année terrestre).',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+    }
+    if (intersects[i].object === jupiter) {
+      Swal.fire({
+        title: 'Informations sur jupiter',
+        html: 'Jupiter est la cinquième planète du Système solaire par ordre d\'éloignement au Soleil, et la plus grande par la taille et la masse devant Saturne, qui est comme elle une planète géante gazeuse. Elle est même plus volumineuse que toutes les autres planètes réunies avec son rayon moyen de 69 911 km, qui vaut environ onze fois celui de la Terre, et sa masse de 1,898 × 1027 kg, qui est 318 fois plus grande. Orbitant en moyenne à environ 779 millions de kilomètres du Soleil (5,2 unités astronomiques), sa période de révolution vaut un peu moins de 12 ans.',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+
+    }
+    if (intersects[i].object === saturn) {
+      Swal.fire({
+        title: 'Informations sur saturn',
+        html: 'Saturne est la sixième planète du Système solaire par ordre d\'éloignement au Soleil, et la deuxième plus grande par la taille et la masse après Jupiter, qui est comme elle une planète géante gazeuse. Son rayon moyen de 58 232 km est environ neuf fois et demi celui de la Terre et sa masse de 568,46 × 1024 kg est 95 fois plus grande. Orbitant en moyenne à environ 1,4 milliard de kilomètres du Soleil (9,5 unités astronomiques), sa période de révolution vaut un peu moins de 30 années terrestres tandis que sa période de rotation est estimée à 10 h 33 min.',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+
+    }
+    if (intersects[i].object === uranus) {
+      Swal.fire({
+        title: 'Informations sur uranus',
+        html: 'Uranus est la septième planète du Système solaire par ordre d\'éloignement du Soleil. Elle orbite autour de celui-ci à une distance d\'environ 19,2 unités astronomiques (2,87 milliards de kilomètres), avec une période de révolution de 84,05 années terrestres. Il s\'agit de la quatrième planète la plus massive du Système solaire et de la troisième plus grande par la taille.',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+
+    }
+    if (intersects[i].object === neptune) {
+      Swal.fire({
+        title: 'Informations sur neptune',
+        html: 'Neptune est la huitième planète par ordre d\'éloignement au Soleil et la plus éloignée connue du Système solaireN 2. Elle orbite autour du Soleil à une distance d\'environ 30,1 au (4,5 milliards de kilomètres), avec une excentricité orbitale moitié moindre que celle de la Terre et une période de révolution de 164,79 ans. Il s\'agit de la troisième planète la plus massive du Système solaire et de la quatrième plus grande par la taille — un peu plus massive mais un peu plus petite qu\'Uranus. Par ailleurs, elle est la planète géante la plus dense.',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+
+    }
+    if (intersects[i].object === pluton) {
+      Swal.fire({
+        title: 'Informations sur pluton',
+        html: 'Pluton, officiellement désignée par (134340) Pluton (désignation internationale : (134340) Pluto), est une planète naine, la plus volumineuse connue dans le Système solaire (2 372 km de diamètre, contre 2 326 km pour Éris), et la deuxième en ce qui concerne sa masse (après Éris). Pluton est ainsi le neuvième plus gros objet connu orbitant directement autour du Soleil et le dixième par la masse. ',
+        icon: 'info',
+        confirmButtonText: 'Fermer'
+      });
+
+    }
+
+  }
+}
+
+window.addEventListener('click', onMouseClick, false);
+
 
 animate();
 export  default  animate()
